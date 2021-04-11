@@ -1,0 +1,1 @@
+void repete(char *, int );
