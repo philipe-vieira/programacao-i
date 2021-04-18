@@ -16,22 +16,54 @@ typedef struct{
 void imprimir_menu(){
 	printf("\t Escolha a opção desejada\n\n");
 	printf("1. Cadastro de Passageiro\n");
-	printf("2. Minha conta\n");
+	printf("2. Alterar cadastro do Passageiro\n");
 	printf("3. Comprar Passagens\n");
 	printf("4. Solicitar Reembolso\n");
 	printf("0. Sair\n");
 }
 
-// Função para cadastrar o cliente
+// Função para cadastrar o cliente - OK
 void cadastro_cliente(Cliente *cliente)
 {
   printf("Bem-vindo ao sistema TheBus!\nDigite as informações desejadas para a efetuação do cadastro.\n");
   
+  // Lendo o CPF do cliente
   printf("CPF -> ");
   scanf("%i", &cliente->cpf);
 
+	// Lendo o nome do cliente
   printf("Nome -> ");
   scanf("%s", cliente->nome);
+}
+
+// Funcao para alterar o cadastro do cliente - OK
+// Obs.: Os parametros nao precisam ser ponteiros pois não serao alterados aqui, mas sim na funcao cadastro_cliente()
+void alterar_cliente (Cliente array_de_clientes[100], int qnt_de_clientes)
+{
+	// Sessao p/ declaração de variaveis
+	int cpf, posicao_no_array=-1;
+	
+	// Lendo o cpf a ser alterado
+	printf("Digite o cpf do cliente a ser alterado -> ");
+  scanf("%i", &cpf);
+  
+  // Procurando a posicao do array que aquele cpf se encontra
+  // Obs.: i < qnt_de_clientes -> para não procurar nas posicoes ainda vazias
+  for(int i=0; i < qnt_de_clientes; i++){
+    if(array_de_clientes[i].cpf == cpf)
+      posicao_no_array = i;
+  }
+  
+  // Se a posição do array ainda é o valor iniciado,
+  // Então o cpf do cliente nao foi encontrado
+  if (posicao_no_array == -1){
+  	printf("O CPF do cliente não foi encontrado\n");
+  	// RETURN para para a função alterar_cliente
+    return;
+	}
+	
+	// Se o cpf foi encontrado no array, executa o cadastro novamente
+	cadastro_cliente(&array_de_clientes[posicao_no_array]);	
 }
 
 /* Acredito que essa função não será necessária. By Philipe
@@ -96,7 +128,8 @@ int main()
 			break;
 			
 			case 2:
-				//minhaconta();
+				// Chama a funcao para alterar o cadastro do passageiro
+				alterar_cliente (array_de_clientes, qnt_de_clientes_cadastrados);
 			break;
 			
 			case 3:
@@ -133,9 +166,9 @@ int main()
 BACKLOG DE FUÇÕES A IMPLEMENTAR
 // Função para imprimir menu - OK
 
-// Função para cadastrar o cliente
+// Função para cadastrar o cliente - OK
 
-// Função para alterar o cadastro do cliente
+// Função para alterar o cadastro do cliente - OK
 
 // Função para adquirir passagem
 
