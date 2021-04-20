@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <locale.h>
 
-// Struct para o cliente
+// Struct para o passageiro
 typedef struct{
 	int cpf;
 	char nome[30];
-}Cliente;
+}Passageiro;
 // Struct para a passagem
 typedef struct{
 	int assento;
-	Cliente passageiro;
-}Passagem;
+	Passageiro passageiro;
+} Passagem;
+// Struct para o Itinerario/Viagem
+typedef struct{
+	Passagem passagem[30];
+} Itinerario; 
 
 // Função para imprimir menu - OK
 void imprimir_menu(){
@@ -22,66 +26,68 @@ void imprimir_menu(){
 	printf("0. Sair\n");
 }
 
-// Função para cadastrar o cliente - OK
-void cadastro_cliente(Cliente *cliente)
+// Função para cadastrar o passageiro - OK
+void cadastro_passageiro(Passageiro *passageiro)
 {
   printf("Bem-vindo ao sistema TheBus!\nDigite as informações desejadas para a efetuação do cadastro.\n");
   
-  // Lendo o CPF do cliente
+  // Lendo o CPF do passageiro
   printf("CPF -> ");
-  scanf("%i", &cliente->cpf);
+  scanf("%i", &passageiro->cpf);
 
-	// Lendo o nome do cliente
+	// Lendo o nome do passageiro
   printf("Nome -> ");
-  scanf("%s", cliente->nome);
+  scanf("%s", passageiro->nome);
 }
 
-// Funcao para alterar o cadastro do cliente - OK
-// Obs.: Os parametros nao precisam ser ponteiros pois não serao alterados aqui, mas sim na funcao cadastro_cliente()
-void alterar_cliente (Cliente array_de_clientes[100], int qnt_de_clientes)
+// Funcao para alterar o cadastro do passageiro - OK
+// Obs.: Os parametros nao precisam ser ponteiros pois não serao alterados aqui, mas sim na funcao cadastro_passageiro()
+void alterar_passageiro (Passageiro array_de_passageiros[100], int qnt_de_passageiro)
 {
 	// Sessao p/ declaração de variaveis
 	int cpf, posicao_no_array=-1;
 	
 	// Lendo o cpf a ser alterado
-	printf("Digite o cpf do cliente a ser alterado -> ");
+	printf("Digite o cpf do passageiro a ser alterado -> ");
   scanf("%i", &cpf);
   
   // Procurando a posicao do array que aquele cpf se encontra
-  // Obs.: i < qnt_de_clientes -> para não procurar nas posicoes ainda vazias
-  for(int i=0; i < qnt_de_clientes; i++){
-    if(array_de_clientes[i].cpf == cpf)
+  // Obs.: i < qnt_de_passageiro -> para não procurar nas posicoes ainda vazias
+  for(int i=0; i < qnt_de_passageiro; i++){
+    if(array_de_passageiros[i].cpf == cpf)
       posicao_no_array = i;
   }
   
   // Se a posição do array ainda é o valor iniciado,
-  // Então o cpf do cliente nao foi encontrado
+  // Então o cpf do passageiro nao foi encontrado
   if (posicao_no_array == -1){
-  	printf("O CPF do cliente não foi encontrado\n");
-  	// RETURN para para a função alterar_cliente
+  	printf("O CPF do passageiro não foi encontrado\n");
+  	// RETURN para para a função alterar_passageiro
     return;
 	}
 	
 	// Se o cpf foi encontrado no array, executa o cadastro novamente
-	cadastro_cliente(&array_de_clientes[posicao_no_array]);	
+	cadastro_passageiro(&array_de_passageiros[posicao_no_array]);	
 }
-
-/* Acredito que essa função não será necessária. By Philipe
-void minhaconta()
-{
-    printf("Bem-vindo ao cadastro do cliente.\n");
-}
-*/
 
 void comprar_passagem()
 {
-    printf("Você acaba de solicitar a compra de passagem.\n"
-		" Por favor selecine a data e o assento desejado, "
-		"em seguida listaremos os horarios disponiveis para o itinerário");
-    /* provavelmente teremos que fazer um banco de dados com os horarios disponiveis?
+  printf("Você acaba de solicitar a compra de passagem.\n"
+	"Por favor selecine o horário e o assento desejado, "
+	"em seguida listaremos os horarios disponiveis para o itinerário\n");
+  /* provavelmente teremos que fazer um banco de dados com os horarios disponiveis?
 	segunda a domingo, desses 7 dias, colocaremos 10 horarios por dias disponiveis?
 	oq vocês acham?  
 	*/
+	
+	for(int i = 0; i < 4; i++ ){
+		for (int j=i; j < 40; j=j+4){
+			printf("%2d ", j+1);
+		}
+		if(i == 1)
+			printf("\n");
+		printf("\n");
+	}
 }
 
 void reembolso()
@@ -95,14 +101,13 @@ void sair()
 }
 
 
-int main()
-{
+int main(){
 	setlocale(LC_ALL, "portuguese_brazil");
 	
 	// Seção de declaração de variaveis globais
 	int continuar=1;
-	int qnt_de_clientes_cadastrados = 0;
-	Cliente array_de_clientes[100];
+	int qnt_de_passageiros_cadastrados = 0;
+	Passageiro array_de_passageiros[100];
 	
 	// Mensagen de boas vindas
 	printf("\tBem-vindo ao sistema TheBus\n");
@@ -118,18 +123,20 @@ int main()
 		switch(escolha_do_usuario)
 		{
 			case 1:
-				// 1. Chama a função que cadastra um cliente
-				// 2. Passa, por parametro uma posição do array de clientes
-				// 3. A posição do array corresponde a quantidade de clientes cadastrado anteriormente
-				// Ex.: Se há 5 clientes cadastrados, o 6° será cadastrado na posição 5 do array. Pois o array começa com a posição 0				
-				cadastro_cliente(&array_de_clientes[qnt_de_clientes_cadastrados]);
-				// Incrementa mais um cliente cadastrado
-				qnt_de_clientes_cadastrados++;
+				// 1. Chama a função que cadastra um passageiro
+				// 2. Passa, por parametro uma posição do array de passageiros
+				// 3. A posição do array corresponde a quantidade de passageiros cadastrado anteriormente
+				// Ex.: Se há 5 passageiros cadastrados, o 6° será cadastrado na posição 5 do array. Pois o array começa com a posição 0				
+				cadastro_passageiro(&array_de_passageiros[qnt_de_passageiros_cadastrados]);
+				// Incrementa mais um passageiro cadastrado
+				qnt_de_passageiros_cadastrados++;
+				printf("\n\nPassageiro cadastrado com sucesso!\n");
 			break;
 			
 			case 2:
-				// Chama a funcao para alterar o cadastro do passageiro
-				alterar_cliente (array_de_clientes, qnt_de_clientes_cadastrados);
+				// Chama a funcao para alterar o cadastro do passageiro 
+				alterar_passageiro (array_de_passageiros, qnt_de_passageiros_cadastrados);
+				printf("\n\nPassageiro alterado com sucesso!\n");
 			break;
 			
 			case 3:
@@ -166,9 +173,9 @@ int main()
 BACKLOG DE FUÇÕES A IMPLEMENTAR
 // Função para imprimir menu - OK
 
-// Função para cadastrar o cliente - OK
+// Função para cadastrar o passageiro - OK
 
-// Função para alterar o cadastro do cliente - OK
+// Função para alterar o cadastro do passageiro - OK
 
 // Função para adquirir passagem
 
