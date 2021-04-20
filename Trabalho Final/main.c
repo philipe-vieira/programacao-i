@@ -16,6 +16,16 @@ typedef struct{
 	Passagem passagem[30];
 } Itinerario; 
 
+// função que retorna o índice do passageiro no vetor, se encontrado.
+int buscarPassageiro(int cpf, Passageiro arrayPassageiros[], int qnt_passageirosCad){
+	int i;
+	for(i=0; i<qnt_passageirosCad; i++){
+		if(arrayPassageiros[i].cpf==cpf)
+			return i;
+	}
+	return -1;
+}
+
 // Função para imprimir menu - OK
 void imprimir_menu(){
 	printf("\t Escolha a opção desejada\n\n");
@@ -70,8 +80,9 @@ void alterar_passageiro (Passageiro array_de_passageiros[100], int qnt_de_passag
 	cadastro_passageiro(&array_de_passageiros[posicao_no_array]);	
 }
 
-void comprar_passagem()
+void comprar_passagem(Passagem arrayPassagens[6][30], int qnt_passComp[], Passageiro arrayPassageiros[], int qnt_passageirosCad)
 {
+	int hora, assento, cpf, indice, disponibilidade=1;
   printf("Você acaba de solicitar a compra de passagem.\n"
 	"Por favor selecine o horário e o assento desejado, "
 	"em seguida listaremos os horarios disponiveis para o itinerário\n");
@@ -87,6 +98,35 @@ void comprar_passagem()
 		if(i == 1)
 			printf("\n");
 		printf("\n");
+	}
+	
+	printf("\nHora-> ");//lê a hora da viagem
+	scanf("%d", &hora);
+	printf("Assento-> ");
+	scanf("%d", &assento);
+	
+	//verifica a disponibilidade do assento, não tenho certeza se está funcionando.
+	for(int i=0; i<qnt_passComp[hora]; i++){
+		//se o assento escolhido no horário digitado não estiver disponível
+		//disponibilidade recebe zero
+		if(arrayPassagens[hora][qnt_passComp[hora]].assento==assento)
+			disponibilidade=0;
+	}
+	
+	if(disponibilidade){
+		printf("CPF-> ");
+		scanf("%d", &cpf);
+		indice= buscarPassageiro(cpf, arrayPassageiros, qnt_passageirosCad);//busca passageiro pelo cpf
+		if(indice!=-1){
+			// atribui os valores(passageiro e assento) a matriz passagem no horário escolhido
+			arrayPassagens[hora][qnt_passComp[hora]].passageiro= arrayPassageiros[indice];
+			arrayPassagens[hora][qnt_passComp[hora]].assento= assento;
+			qnt_passComp[hora]++;// incrementa a quantidade de passagens.
+		}else{
+			printf("Passageiro não cadastrado.\n");
+		}
+	}else{
+		printf("Assento indisponível.\n");
 	}
 }
 
@@ -109,6 +149,14 @@ int main(){
 	int qnt_de_passageiros_cadastrados = 0;
 	Passageiro array_de_passageiros[100];
 	
+	// quantidade de passagens compradas por horário
+	int qnt_passagensCompradas[6];
+	// zerar quantidade de passagens compradas, nos 6 hórarios dispóniveis
+	for(int i=0; i<6; i++){
+		qnt_passagensCompradas[i]=0;
+	}
+	
+	Passagem arrayPassagens[6][30];
 	// Mensagen de boas vindas
 	printf("\tBem-vindo ao sistema TheBus\n");
 	
@@ -140,7 +188,7 @@ int main(){
 			break;
 			
 			case 3:
-				comprar_passagem();
+				comprar_passagem(arrayPassagens, qnt_passagensCompradas, array_de_passageiros, qnt_de_passageiros_cadastrados);
 			break;
 			
 			case 4:
