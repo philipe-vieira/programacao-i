@@ -81,53 +81,93 @@ void alterar_passageiro (Passageiro array_de_passageiros[100], int qnt_de_passag
 	cadastro_passageiro(&array_de_passageiros[posicao_no_array]);	
 }
 
-void comprar_passagem(Passagem arrayPassagens[6][30], int qnt_passComp[], Passageiro arrayPassageiros[], int qnt_passageirosCad)
+int verificar_disponibilidade_assento(
+	int hora, 
+	int assento, 
+	int qnt_passagem_comprada, 
+	Passagem arrayPassagens[6][40])
 {
-	int hora, assento, cpf, indice, disponibilidade=1;
-  printf("Você acaba de solicitar a compra de passagem.\n"
-	"Por favor selecine o horário e o assento desejado, "
-	"em seguida listaremos os horarios disponiveis para o itinerário\n");
+	for(int i=0; i < qnt_passagem_comprada; i++){
+		//se o assento escolhido no horário digitado não estiver disponível
+		//funcao retorna ZERO
+		if(arrayPassagens[hora][i].assento==assento)
+			return 0;
+	}
+	return 1;
+}
+
+void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passageiro arrayPassageiros[], int qnt_passageirosCad)
+{
+	int hora, assento, disponibilidade=1;
+  printf("\tVocê acaba de solicitar a compra de passagem.\n"
+	"Por favor selecine o horário desejado, "
+	"em seguida listaremos os assentos disponiveis para o itinerário\n");
   /* provavelmente teremos que fazer um banco de dados com os horarios disponiveis?
 	segunda a domingo, desses 7 dias, colocaremos 10 horarios por dias disponiveis?
 	oq vocês acham?  
 	*/
 	
+	//Listando horarios de viagem disponíveis
+	//printf("Horários de viagem disponíveis");
+	printf("00h - 04h - 08h - 12h - 16h - 20h");
+	// Lendo o horario da viagem
+	printf("\nDigite a hora da Viagem(Somente numeros)-> ");
+	scanf("%d", &hora);
+	//Convertendo a Hora
+	hora = hora/4;
+	//Listando os assentos disponíveis
+	printf("Assentos disponiveis:\n");
+	printf("--------------------\n");
 	for(int i = 0; i < 4; i++ ){
 		for (int j=i; j < 40; j=j+4){
-			printf("%2d ", j+1);
+			// Verifica cada assento daquele horario, se está vazio
+			// Se sim imprime o numero do assento
+			if(verificar_disponibilidade_assento(hora, (j+1), qnt_passComp[hora], arrayPassagens)){
+				printf("%.2d ", j+1);
+			}else { 
+				// Senao imprime --
+				printf("-- ");
+			}
 		}
+		// Se i=1 imprime uma quebra de linha a mais para o corredor
 		if(i == 1)
 			printf("\n");
 		printf("\n");
 	}
+	printf("--------------------\n");
 	
-	printf("\nHora-> ");//lê a hora da viagem
-	scanf("%d", &hora);
-	printf("Assento-> ");
+	// Lendo o assento desejado
+	printf("\nDigite o numero do assento -> ");
 	scanf("%d", &assento);
 	
-	//verifica a disponibilidade do assento
-	for(int i=0; i<qnt_passComp[hora]; i++){
-		//se o assento escolhido no horário digitado não estiver disponível
-		//disponibilidade recebe zero
-		if(arrayPassagens[hora][i].assento==assento)
-			disponibilidade=0;
-	}
+	//verifica a disponibilidade do assento escolhido
+	disponibilidade = verificar_disponibilidade_assento(hora, assento, qnt_passComp[hora], arrayPassagens);
 	
+	// Se o assento estiver disponivel 
 	if(disponibilidade){
+		int cpf, indice = -1;
+		
+		// Lê o cpf do passageiro a adquirir o assento
 		printf("CPF-> ");
 		scanf("%d", &cpf);
-		indice= buscarPassageiro(cpf, arrayPassageiros, qnt_passageirosCad);//busca passageiro pelo cpf
-		if(indice!=-1){
-			// atribui os valores(passageiro e assento) a matriz passagem no horário escolhido
-			arrayPassagens[hora][qnt_passComp[hora]].passageiro= arrayPassageiros[indice];
-			arrayPassagens[hora][qnt_passComp[hora]].assento= assento;
-			qnt_passComp[hora]++;// incrementa a quantidade de passagens.
-		}else{
+		//busca passageiro pelo cpf
+		indice = buscarPassageiro(cpf, arrayPassageiros, qnt_passageirosCad);
+		// Verifica se o passageiro não foi encontrado
+		if(indice < 0){
 			printf("Passageiro não cadastrado.\n");
+			return;
 		}
+		
+		// atribui os valores(passageiro e assento) a matriz passagem no horário escolhido
+		arrayPassagens[hora][qnt_passComp[hora]].passageiro= arrayPassageiros[indice];
+		arrayPassagens[hora][qnt_passComp[hora]].assento= assento;
+		// incrementa a quantidade de passagens compradas +1.
+		qnt_passComp[hora]++;
+		printf("\n\nPassagem adquirida com sucesso.\n");
+		
 	}else{
 		printf("Assento indisponível.\n");
+		return;
 	}
 }
 
@@ -151,13 +191,13 @@ int main(){
 	Passageiro array_de_passageiros[100];
 	
 	// quantidade de passagens compradas por horário
-	int qnt_passagensCompradas[6];
+	int qnt_passagensCompradas[6]={0,0,0,0,0,0};
 	// zerar quantidade de passagens compradas, nos 6 hórarios dispóniveis
-	for(int i=0; i<6; i++){
-		qnt_passagensCompradas[i]=0;
-	}
-	
-	Passagem arrayPassagens[6][30];
+	//for(int i=0; i<6; i++){
+	//	qnt_passagensCompradas[i]=0;
+	//}
+	// Matriz de Passagens com 6 horarios de viagens e 40 assentos cada
+	Passagem arrayPassagens[6][40];
 	// Mensagen de boas vindas
 	printf("\tBem-vindo ao sistema TheBus\n");
 	
@@ -189,6 +229,7 @@ int main(){
 			break;
 			
 			case 3:
+				
 				comprar_passagem(arrayPassagens, qnt_passagensCompradas, array_de_passageiros, qnt_de_passageiros_cadastrados);
 			break;
 			
@@ -215,6 +256,7 @@ int main(){
     system("cls");
 	} while (continuar == 1);
 	
+	return 0;
 }
 
 
