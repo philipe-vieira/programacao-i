@@ -105,11 +105,11 @@ void comprar_passagem(Passagem arrayPassagens[6][30], int qnt_passComp[], Passag
 	printf("Assento-> ");
 	scanf("%d", &assento);
 	
-	//verifica a disponibilidade do assento, não tenho certeza se está funcionando.
+	//verifica a disponibilidade do assento
 	for(int i=0; i<qnt_passComp[hora]; i++){
 		//se o assento escolhido no horário digitado não estiver disponível
 		//disponibilidade recebe zero
-		if(arrayPassagens[hora][qnt_passComp[hora]].assento==assento)
+		if(arrayPassagens[hora][i].assento==assento)
 			disponibilidade=0;
 	}
 	
