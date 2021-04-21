@@ -11,6 +11,7 @@ typedef struct{
 	int assento;
 	Passageiro passageiro;
 } Passagem;
+
 // Struct para o Itinerario/Viagem
 typedef struct{
 	Passagem passagem[30];
@@ -185,7 +186,7 @@ BACKLOG DE FUÇÕES A IMPLEMENTAR
 
 // Função para listar os passageiros
 
-// Função para listar os assentos 
+// Função para listar os assentos comprados
 
 // Função para listar a qnt de assentos e o valor a pagar
 */
