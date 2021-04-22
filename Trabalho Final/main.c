@@ -11,12 +11,12 @@ typedef struct{
 	int assento;
 	Passageiro passageiro;
 } Passagem;
-
+/*
 // Struct para o Itinerario/Viagem
 typedef struct{
 	Passagem passagem[30];
 } Itinerario; 
-
+*/
 // função que retorna o índice do passageiro no vetor, se encontrado.
 int buscarPassageiro(int cpf, Passageiro arrayPassageiros[], int qnt_passageirosCad){
 	int i;
@@ -83,11 +83,10 @@ void alterar_passageiro (Passageiro array_de_passageiros[100], int qnt_de_passag
 
 int verificar_disponibilidade_assento(
 	int hora, 
-	int assento, 
-	int qnt_passagem_comprada, 
+	int assento,
 	Passagem arrayPassagens[6][40])
 {
-	for(int i=0; i < qnt_passagem_comprada; i++){
+	for(int i=0; i < 40; i++){
 		//se o assento escolhido no horário digitado não estiver disponível
 		//funcao retorna ZERO
 		if(arrayPassagens[hora][i].assento==assento)
@@ -113,7 +112,7 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 	// Lendo o horario da viagem
 	printf("\nDigite a hora da Viagem(Somente numeros)-> ");
 	scanf("%d", &hora);
-	//Convertendo a Hora
+	//Convertendo a Hora para a posicao do array
 	hora = hora/4;
 	//Listando os assentos disponíveis
 	printf("Assentos disponiveis:\n");
@@ -122,7 +121,7 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 		for (int j=i; j < 40; j=j+4){
 			// Verifica cada assento daquele horario, se está vazio
 			// Se sim imprime o numero do assento
-			if(verificar_disponibilidade_assento(hora, (j+1), qnt_passComp[hora], arrayPassagens)){
+			if(verificar_disponibilidade_assento(hora, (j+1), arrayPassagens)){
 				printf("%.2d ", j+1);
 			}else { 
 				// Senao imprime --
@@ -141,7 +140,7 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 	scanf("%d", &assento);
 	
 	//verifica a disponibilidade do assento escolhido
-	disponibilidade = verificar_disponibilidade_assento(hora, assento, qnt_passComp[hora], arrayPassagens);
+	disponibilidade = verificar_disponibilidade_assento(hora, assento, arrayPassagens);
 	
 	// Se o assento estiver disponivel 
 	if(disponibilidade){
@@ -159,8 +158,8 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 		}
 		
 		// atribui os valores(passageiro e assento) a matriz passagem no horário escolhido
-		arrayPassagens[hora][qnt_passComp[hora]].passageiro= arrayPassageiros[indice];
-		arrayPassagens[hora][qnt_passComp[hora]].assento= assento;
+		arrayPassagens[hora][assento-1].passageiro= arrayPassageiros[indice];
+		arrayPassagens[hora][assento-1].assento= assento;
 		// incrementa a quantidade de passagens compradas +1.
 		qnt_passComp[hora]++;
 		printf("\n\nPassagem adquirida com sucesso.\n");
@@ -171,9 +170,81 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 	}
 }
 
-void reembolso()
+void reembolso(
+	Passageiro array_de_passageiros[100],
+	int qnt_passageiros_cadastrados, 
+	Passagem array_passagens[6][40], 
+	int qnt_passagens_compradas[6])
 {
-    printf("Você acaba de solicitar o reembolso de passagem.\n por favor leia as regras.\n");
+  printf("Você acaba de solicitar o reembolso de passagem.\n por favor leia as regras.\n");
+  
+	int hora, assento;
+	
+	printf("\tHorarios Programados\n00h - 04h - 08h - 12h - 16h - 20h");
+	// Lendo o horario da viagem
+	printf("\nDigite a hora da Viagem(Somente numeros)-> ");
+	scanf("%d", &hora);
+	//Convertendo a Hora para a posicao do array
+	hora = hora/4;
+	//Listando os assentos disponíveis
+	printf("Assentos disponiveis:\n");
+	printf("--------------------\n");
+	for(int i = 0; i < 4; i++ ){
+		for (int j=i; j < 40; j=j+4){
+			// Verifica cada assento daquele horario, se está OCUPADO
+			// Se sim imprime o numero do assento
+			if(!verificar_disponibilidade_assento(hora, (j+1), array_passagens)){
+				printf("%.2d ", j+1);
+			}else { 
+				// Senao imprime --
+				printf("-- ");
+			}
+		}
+		// Se i=1 imprime uma quebra de linha a mais para o corredor
+		if(i == 1)
+			printf("\n");
+		printf("\n");
+	}
+	printf("--------------------\n");
+	
+	// Lendo o assento desejado
+	printf("\nDigite o numero do assento -> ");
+	scanf("%d", &assento);
+	
+	//verifica a disponibilidade do assento escolhido
+	int disponibilidade = verificar_disponibilidade_assento(hora, assento, array_passagens);
+	
+	// Se o assento estiver OCUPADO
+	if(!disponibilidade){
+		int cpf, indice = -1;
+		Passageiro passageiro_vazio;
+		
+		// Lê o cpf do passageiro a adquirir o assento
+		printf("CPF-> ");
+		scanf("%d", &cpf);
+		//busca passageiro pelo cpf
+		indice = buscarPassageiro(cpf, array_de_passageiros, qnt_passageiros_cadastrados);
+		// Verifica se o passageiro não foi encontrado
+		if(indice < 0){
+			printf("Passageiro não cadastrado.\n");
+			return;
+		}
+		
+		if(array_passagens[hora][assento-1].passageiro.cpf != cpf){
+			printf("Passageiro informado não é o proprietario deste ticket.\n");
+			return;
+		}
+		
+		// atribui os valores de um pasageiro vazio para aquela ocorrencia
+		array_passagens[hora][assento-1].passageiro = passageiro_vazio;
+		array_passagens[hora][assento-1].assento= 0;
+		// decrementa a quantidade de passagens compradas -1.
+		qnt_passagens_compradas[hora]--;
+		printf("\n\nPassagem devolvida com sucesso.\n");
+	}else{
+		printf("Este assento ainda não foi adquirido.\n");
+		return;
+	}
 }
 
 void sair()
@@ -191,11 +262,9 @@ int main(){
 	Passageiro array_de_passageiros[100];
 	
 	// quantidade de passagens compradas por horário
+	// zerar quantidade de passagens compradas, nos 6 hórarios disponiveis
 	int qnt_passagensCompradas[6]={0,0,0,0,0,0};
-	// zerar quantidade de passagens compradas, nos 6 hórarios dispóniveis
-	//for(int i=0; i<6; i++){
-	//	qnt_passagensCompradas[i]=0;
-	//}
+
 	// Matriz de Passagens com 6 horarios de viagens e 40 assentos cada
 	Passagem arrayPassagens[6][40];
 	// Mensagen de boas vindas
@@ -229,12 +298,12 @@ int main(){
 			break;
 			
 			case 3:
-				
+				// Chama a funcao para comprar a passagem
 				comprar_passagem(arrayPassagens, qnt_passagensCompradas, array_de_passageiros, qnt_de_passageiros_cadastrados);
 			break;
 			
 			case 4:
-				reembolso();
+				reembolso(array_de_passageiros, qnt_de_passageiros_cadastrados, arrayPassagens, qnt_passagensCompradas);
 			break;
 			
 			case 0:
@@ -268,13 +337,13 @@ BACKLOG DE FUÇÕES A IMPLEMENTAR
 
 // Função para alterar o cadastro do passageiro - OK
 
-// Função para adquirir passagem
+// Função para adquirir passagem - OK
 
-// Função para alterar passagem
+// Função para alterar passagem 
 
-// Função para devolver passagem
+// Função para devolver passagem - OK
 
-// Função para listar os passageiros
+// Função para listar os passageiros - 
 
 // Função para listar os assentos comprados
 
