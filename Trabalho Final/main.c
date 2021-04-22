@@ -99,24 +99,22 @@ int verificar_disponibilidade_assento(
 void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passageiro arrayPassageiros[], int qnt_passageirosCad)
 {
 	int hora, assento, disponibilidade=1;
-  printf("\tVocê acaba de solicitar a compra de passagem.\n"
-	"Por favor selecine o horário desejado, "
-	"em seguida listaremos os assentos disponiveis para o itinerário\n");
-  /* provavelmente teremos que fazer um banco de dados com os horarios disponiveis?
-	segunda a domingo, desses 7 dias, colocaremos 10 horarios por dias disponiveis?
-	oq vocês acham?  
-	*/
+  printf("\tVocê solicitou a opção 'Comprar Passagens'.\n"
+ 		 "\t-------------------------------------------\n\n"
+	"\tPor favor, selecione o horário do embarque. \n\n");
 	
 	//Listando horarios de viagem disponíveis
-	//printf("Horários de viagem disponíveis");
-	printf("00h - 04h - 08h - 12h - 16h - 20h");
+	printf("\t          Horarios Disponíveis:\n\n"
+	"\t     ---------------------------------\n"
+	"\t     00h - 04h - 08h - 12h - 16h - 20h\n"
+	"\t     ---------------------------------\n\n");
 	// Lendo o horario da viagem
-	printf("\nDigite a hora da Viagem(Somente numeros)-> ");
+	printf("\tDigite a hora da Viagem(Somente numeros)-> ");
 	scanf("%d", &hora);
 	//Convertendo a Hora para a posicao do array
 	hora = hora/4;
 	//Listando os assentos disponíveis
-	printf("Assentos disponiveis:\n");
+	printf("\nAssentos disponiveis:\n");
 	printf("--------------------\n");
 	for(int i = 0; i < 4; i++ ){
 		for (int j=i; j < 40; j=j+4){
@@ -135,7 +133,7 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 		printf("\n");
 	}
 	printf("--------------------\n");
-	
+
 	// Lendo o assento desejado
 	printf("\nDigite o numero do assento -> ");
 	scanf("%d", &assento);
@@ -177,19 +175,22 @@ void reembolso(
 	Passagem array_passagens[6][40], 
 	int qnt_passagens_compradas[6])
 {
-  printf("Você acaba de solicitar o reembolso de passagem.\n por favor leia as regras.\n");
+  printf("   Você selecionou a opção 'Solicitar Reembolso'\n\n");
   
 	int hora, assento;
 	
-	printf("\tHorarios Programados\n00h - 04h - 08h - 12h - 16h - 20h");
+	printf("\t      Horarios Disponíveis:\n"
+	"\t---------------------------------\n"
+	"\t00h - 04h - 08h - 12h - 16h - 20h\n"
+	"\t---------------------------------");
 	// Lendo o horario da viagem
-	printf("\nDigite a hora da Viagem(Somente numeros)-> ");
+	printf("\n   Digite o horário do embarque(Somente numeros)->");
 	scanf("%d", &hora);
 	//Convertendo a Hora para a posicao do array
 	hora = hora/4;
 	//Listando os assentos disponíveis
-	printf("Assentos disponiveis:\n");
-	printf("--------------------\n");
+	printf("\tAssentos disponiveis:\n");
+	printf("\t--------------------\n");
 	for(int i = 0; i < 4; i++ ){
 		for (int j=i; j < 40; j=j+4){
 			// Verifica cada assento daquele horario, se está OCUPADO
@@ -342,21 +343,13 @@ int main(){
 /*
 BACKLOG DE FUÇÕES A IMPLEMENTAR
 // Função para imprimir menu - OK
-
 // Função para cadastrar o passageiro - OK
-
 // Função para alterar o cadastro do passageiro - OK
-
 // Função para adquirir passagem - OK
-
 // Função para alterar passagem 
-
 // Função para devolver passagem - OK
-
 // Função para listar os passageiros - 
-
 // Função para listar os assentos comprados
-
 // Função para listar a qnt de assentos e o valor a pagar
 */
 
