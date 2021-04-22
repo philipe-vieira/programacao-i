@@ -34,6 +34,7 @@ void imprimir_menu(){
 	printf("2. Alterar cadastro do Passageiro\n");
 	printf("3. Comprar Passagens\n");
 	printf("4. Solicitar Reembolso\n");
+	printf("5. Listar passageiros cadastrados\n");
 	printf("0. Sair\n");
 }
 
@@ -252,6 +253,11 @@ void sair()
     printf("Você soliciou a opção sair. agradecemos a utilização do nosso sistema.\n");
 }
 
+void listar_passageiros(Passageiro array_de_passageiros[100], int qnt_de_passageiros_cadastrados){
+	for(int i = 0; i < qnt_de_passageiros_cadastrados; i++){
+		printf("CPF-%.11d | Nome: %s \n", array_de_passageiros[i].cpf, array_de_passageiros[i].nome);
+	}
+}
 
 int main(){
 	setlocale(LC_ALL, "portuguese_brazil");
@@ -304,6 +310,10 @@ int main(){
 			
 			case 4:
 				reembolso(array_de_passageiros, qnt_de_passageiros_cadastrados, arrayPassagens, qnt_passagensCompradas);
+			break;
+			
+			case 5:
+				listar_passageiros(array_de_passageiros, qnt_de_passageiros_cadastrados);
 			break;
 			
 			case 0:
