@@ -109,7 +109,7 @@ void comprar_passagem(Passagem arrayPassagens[6][40], int qnt_passComp[], Passag
 	"\t     00h - 04h - 08h - 12h - 16h - 20h\n"
 	"\t     ---------------------------------\n\n");
 	// Lendo o horario da viagem
-	printf("\tDigite a hora da Viagem(Somente numeros)-> ");
+	printf("\n   Digite o horário do embarque(Somente numeros)->");
 	scanf("%d", &hora);
 	//Convertendo a Hora para a posicao do array
 	hora = hora/4;
@@ -189,8 +189,8 @@ void reembolso(
 	//Convertendo a Hora para a posicao do array
 	hora = hora/4;
 	//Listando os assentos disponíveis
-	printf("\tAssentos disponiveis:\n");
-	printf("\t--------------------\n");
+	printf("\nAssentos disponiveis:\n");
+	printf("\n-----------------------------\n");
 	for(int i = 0; i < 4; i++ ){
 		for (int j=i; j < 40; j=j+4){
 			// Verifica cada assento daquele horario, se está OCUPADO
@@ -207,7 +207,7 @@ void reembolso(
 			printf("\n");
 		printf("\n");
 	}
-	printf("--------------------\n");
+	printf("-----------------------------\n");
 	
 	// Lendo o assento desejado
 	printf("\nDigite o numero do assento -> ");
@@ -260,6 +260,25 @@ void listar_passageiros(Passageiro array_de_passageiros[100], int qnt_de_passage
 	}
 }
 
+
+ void listar_assentos_ocupados(Passagem arrayPassagens[6][40]) 
+{	
+		for (int z=0; z< 6; z++)
+		{
+			for(int g = 0 ; g < 40 ; g++)
+			{
+				if (verificar_disponibilidade_assento(z,g, arrayPassagens) == 0)
+				
+//				if (arrayPassagens[z][g].assento != 0 )
+				{
+					printf("Assento: %.2d - CPF %i, NOME: %s \n", arrayPassagens[z][g].assento, arrayPassagens[z][g].passageiro.cpf, arrayPassagens[z][g].passageiro.nome);
+				}
+			}	
+		}
+	
+}
+
+
 int main(){
 	setlocale(LC_ALL, "portuguese_brazil");
 	
@@ -274,6 +293,7 @@ int main(){
 
 	// Matriz de Passagens com 6 horarios de viagens e 40 assentos cada
 	Passagem arrayPassagens[6][40];
+	
 	// Mensagen de boas vindas
 	printf("\tBem-vindo ao sistema TheBus\n");
 	
@@ -315,6 +335,10 @@ int main(){
 			
 			case 5:
 				listar_passageiros(array_de_passageiros, qnt_de_passageiros_cadastrados);
+			break;
+			
+			case 6:
+				listar_assentos_ocupados(arrayPassagens);
 			break;
 			
 			case 0:
