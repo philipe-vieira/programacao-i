@@ -35,6 +35,7 @@ void imprimir_menu(){
 	printf("3. Comprar Passagens\n");
 	printf("4. Solicitar Reembolso\n");
 	printf("5. Listar passageiros cadastrados\n");
+	printf("6. Listar assentos adquiridos\n");
 	printf("0. Sair\n");
 }
 
@@ -265,13 +266,16 @@ void listar_passageiros(Passageiro array_de_passageiros[100], int qnt_de_passage
 {	
 		for (int z=0; z< 6; z++)
 		{
-			for(int g = 0 ; g < 40 ; g++)
+			printf("Itinerário de %.2d horas\n", z*4);
+			for(int g = 0; g < 40 ; g++)
 			{
-				if (verificar_disponibilidade_assento(z,g, arrayPassagens) == 0)
 				
-//				if (arrayPassagens[z][g].assento != 0 )
+				if (verificar_disponibilidade_assento(z, g+1, arrayPassagens) == 0)
 				{
-					printf("Assento: %.2d - CPF %i, NOME: %s \n", arrayPassagens[z][g].assento, arrayPassagens[z][g].passageiro.cpf, arrayPassagens[z][g].passageiro.nome);
+					printf("Assento: %i - CPF %i, NOME: %s \n", 
+						arrayPassagens[z][g].assento, 
+						arrayPassagens[z][g].passageiro.cpf, 
+						arrayPassagens[z][g].passageiro.nome);
 				}
 			}	
 		}
@@ -293,7 +297,13 @@ int main(){
 
 	// Matriz de Passagens com 6 horarios de viagens e 40 assentos cada
 	Passagem arrayPassagens[6][40];
-	
+	for (int z=0; z< 6; z++)
+	{
+		for(int g = 0; g < 40 ; g++)
+		{
+			arrayPassagens[z][g].assento = -1;
+		}
+	}
 	// Mensagen de boas vindas
 	printf("\tBem-vindo ao sistema TheBus\n");
 	
@@ -370,11 +380,9 @@ BACKLOG DE FUÇÕES A IMPLEMENTAR
 // Função para cadastrar o passageiro - OK
 // Função para alterar o cadastro do passageiro - OK
 // Função para adquirir passagem - OK
-// Função para alterar passagem 
 // Função para devolver passagem - OK
-// Função para listar os passageiros - 
-// Função para listar os assentos comprados
-// Função para listar a qnt de assentos e o valor a pagar
+// Função para listar os passageiros - OK
+// Função para listar os assentos comprados - OK
 */
 
 
